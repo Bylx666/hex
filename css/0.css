@@ -1,0 +1,114 @@
+#edit {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding-left: 45px;
+}
+
+
+#edit-tools {
+  z-index: 2;
+  position: absolute;
+  left: 0;top: 0;
+  height: 100%;
+  box-shadow: 0 0 3px #888;
+  width: 45px;
+  overflow: hidden;
+  transition: width 0.2s;
+  background-color: var(--theme1ex);
+}
+#edit-tools:hover {
+  width: 110px;
+}
+#edit-tools > p {
+  margin: 0;
+  font-size: 20px;
+  line-height: 30px;
+  user-select: none;
+  cursor: pointer;
+  white-space: nowrap;
+  width: 110px;
+  display: flex;
+  padding: 2px 0;
+  color: var(--font1);
+  transition: background-color 0.2s, color 0.5s;
+}
+#edit-tools > p:first-child {
+  padding-top: 10px;
+}
+#edit-tools > p:hover {
+  background-color: #3333;
+}
+#edit-tools > p:active, #edit-tools > p.active {
+  color: var(--font2);
+  background-color: var(--theme1);
+}
+#edit-tools > p > ico {
+  position: relative;
+  width: 45px;
+  text-align: center;
+}
+#edit-tools > hr {
+  border: none;
+  border-bottom: 1px solid #888;
+  margin: 5px 0;
+}
+
+
+#edit-table {
+  display: block;
+  font-family: code, "Cascadia Mono", Consolas, monospace;
+  text-align: left;
+  user-select: none;
+  padding: 10px;
+}
+#edit-table > div {
+  display: flex;
+  line-height: 20px;
+  color: var(--edit);
+}
+#edit-table > div:first-child {
+  color: var(--edit-title);
+}
+#edit-table > div > .h {
+  display: flex;
+  padding-right: 5px;
+}
+#edit-table > div > .h > span {
+  padding: 0 3px;
+  width: 20px;
+}
+#edit-table > div > .h > span:first-child {
+  color: var(--edit-title);
+  padding-right: 8px;
+}
+#edit-table > div > .h > span.f {
+  color: var(--editf);
+}
+#edit-table > div > .h > span.o {
+  color: var(--edit0);
+}
+#edit-table > div > .a {
+  padding: 0 3px;
+  letter-spacing: 3px;
+  white-space: pre;
+}
+
+#edit-scroll {
+  width: 20px;
+  box-shadow: 0 1px 3px #888;
+}
+#edit-scroll > div {
+  position: absolute;
+  top: 0;
+  width: 20px;
+  background-color: #798;
+  opacity: 0.2;
+  transition: opacity 0.2s;
+}
+#edit-scroll > div:hover {
+  opacity: 0.5;
+}
+#edit-scroll > div:active {
+  opacity: 0.8;
+}

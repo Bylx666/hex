@@ -1,0 +1,181 @@
+@font-face {
+  font-family: icon;
+  src: url(/res/icon.woff2);
+}
+@font-face {
+  font-family: code;
+  src: url(/res/code.woff);
+}
+ico {
+  font-family: icon;
+  margin-right: 5px;
+  user-select: none;
+}
+body {
+  --theme1: #bee;
+  --theme1ex: #cff;
+  --theme2: #8ef;
+  --font1: #465;
+  --font2: #313;
+  --link: #38f;
+  --edit-title: #577;
+  --edit: #310;
+  --edit0: #978a;
+  --editf: #f9aa;
+  margin: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--theme1);
+  font-family: "PingFangSC-Regular", "Microsoft Yahei UI", sans-serif;
+}
+::selection {
+  background-color: var(--font1);
+  color: #fff;
+}
+
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+body > header {
+  height: 60px;
+  padding-left: 30px;
+  display: flex;
+}
+body > header > span {
+  margin-top: 20px;
+  color: var(--font1);
+  border-radius: 5px 5px 0 0;
+  user-select: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  font-size: 20px;
+  line-height: 40px;
+  width: 90px;
+  text-align: center;
+}
+body > header > span:hover {
+  opacity: 0.5;
+}
+body > header > span.active {
+  background-color: var(--theme1ex);
+  box-shadow: 0 2px 3px #888;
+  color: var(--font2);
+}
+body > header > span.active:hover {
+  opacity: 1;
+  cursor: default;
+}
+
+@keyframes rotating {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+#loading {
+  position: fixed;
+  top: 20px;
+  left: 5px;
+  color: var(--font1);
+}
+#loading > ico {
+  font-size: 20px;
+  line-height: 40px;
+  position: absolute;
+  animation: rotating 1s linear infinite;
+}
+#loading > span {
+  position: absolute;
+  font-size: 12px;
+  line-height: 40px;
+  width: 20px;
+  text-align: center;
+  user-select: none;
+  font-family: code;
+}
+
+main {
+  height: calc(100vh - 70px);
+  margin: 0 10px;
+  border-radius: 20px;
+  background-color: var(--theme1ex);
+  box-shadow: #888 0 3px 3px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+main > div {
+  animation: fadein 0.5s;
+}
+
+@keyframes tip-fadein {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+#tip {
+  z-index: 100;
+  width: 360px;
+  position: fixed;
+  right: 0;
+  bottom: 20px;
+}
+#tip > div {
+  background-color: #fff;
+  box-shadow: 0 3px 3px #888;
+  margin-bottom: 15px;
+  border-radius: 15px 0 0 15px;
+  padding: 10px;
+  animation: tip-fadein 0.5s;
+  transition: transform 0.5s;
+}
+#tip > div > h3 {
+  margin: 0;
+  padding: 5px;
+  font-weight: normal;
+  white-space: nowrap;
+  color: var(--font1);
+}
+#tip > div > p {
+  margin: 0;
+  padding: 10px 15px;
+  overflow: hidden auto;
+  max-height: 100px;
+  color: var(--font2);
+  word-break: break-all;
+}
+#tip > div > div {
+  display: flex;
+  padding: 5px;
+}
+#tip > div > div > span {
+  line-height: 34px;
+  color: #888;
+  user-select: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  padding: 0 15px;
+}
+#tip > div > div > span:first-child {
+  z-index: 102;
+  background-color: #5dd;
+  box-shadow: 0 1px 3px #5dd;
+  color: #fff;
+  border-radius: 10px;
+  position: relative;
+}
+#tip > div > div > span:hover {
+  opacity: 0.5;
+}

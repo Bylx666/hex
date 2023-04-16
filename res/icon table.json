@@ -1,0 +1,92 @@
+{
+  "id": "4009741",
+  "name": "hex",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "5806957",
+      "name": "38 Info",
+      "font_class": "Info",
+      "unicode": "e8e2",
+      "unicode_decimal": 59618
+    },
+    {
+      "icon_id": "5806958",
+      "name": "40 Warning",
+      "font_class": "Warning",
+      "unicode": "e8e3",
+      "unicode_decimal": 59619
+    },
+    {
+      "icon_id": "5806959",
+      "name": "39 Question",
+      "font_class": "Question",
+      "unicode": "e8e4",
+      "unicode_decimal": 59620
+    },
+    {
+      "icon_id": "5806705",
+      "name": "14 Settings",
+      "font_class": "Settings",
+      "unicode": "e886",
+      "unicode_decimal": 59526
+    },
+    {
+      "icon_id": "5806723",
+      "name": "36 Delete",
+      "font_class": "Delete",
+      "unicode": "e890",
+      "unicode_decimal": 59536
+    },
+    {
+      "icon_id": "5806732",
+      "name": "4 Pencil",
+      "font_class": "Pencil",
+      "unicode": "e891",
+      "unicode_decimal": 59537
+    },
+    {
+      "icon_id": "5806758",
+      "name": "8 Paper_3",
+      "font_class": "Paper_",
+      "unicode": "e897",
+      "unicode_decimal": 59543
+    },
+    {
+      "icon_id": "5806764",
+      "name": "9 Paper_4",
+      "font_class": "Paper_1",
+      "unicode": "e899",
+      "unicode_decimal": 59545
+    },
+    {
+      "icon_id": "5806770",
+      "name": "20 Calculator",
+      "font_class": "Calculator",
+      "unicode": "e89c",
+      "unicode_decimal": 59548
+    },
+    {
+      "icon_id": "5806858",
+      "name": "20 Basket",
+      "font_class": "Basket",
+      "unicode": "e8c0",
+      "unicode_decimal": 59584
+    },
+    {
+      "icon_id": "11891763",
+      "name": "save",
+      "font_class": "save",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "12285520",
+      "name": "二进制",
+      "font_class": "erjinzhi",
+      "unicode": "e6e4",
+      "unicode_decimal": 59108
+    }
+  ]
+}

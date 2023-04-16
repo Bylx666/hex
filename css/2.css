@@ -1,0 +1,119 @@
+#open-upload {
+  position: absolute;
+  left: 50%;top: 50%;
+  transform: translate(-50%, -50%);
+  user-select: none;
+  font-size: 20px;
+  color: var(--font1);
+}
+#open-upload > ico {
+  position: absolute;
+  top: -90px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: icon;
+  font-size: 50px;
+  color: #333;
+}
+#open-upload > p {
+  margin: 10px 0;
+  text-align: center;
+}
+#open-upload > p.a {
+  text-decoration: none;
+  color: var(--link);
+  cursor: pointer;
+}
+#open-upload > p.a:hover {
+  color: var(--font1);
+}
+
+
+#open-list {
+  max-height: calc(100vh - 100px);
+  overflow: hidden auto;
+}
+@keyframes open-in {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: -60% 0%;
+  }
+}
+#open-list > div {
+  margin: 10px;
+  height: 80px;
+  padding: 10px;
+  padding-left: 80px;
+  border-radius: 20px;
+  background-color: #fff;
+  box-shadow: 0 2px 2px #888;
+  position: relative;
+  background-image: linear-gradient(-20deg, 
+    #fff 0%, #fff 25%, var(--theme2) 50%, #fff 75%, #fff 100%);
+  background-size: 200% 100%;
+  background-position: -60% 0%;
+  animation: open-in linear 0.5s;
+  transition: background-position 0.5s;
+  cursor: pointer;
+}
+#open-list > div.active {
+  background-position: 0% 0%;
+  animation: open-in 0.5s linear reverse;
+}
+#open-list > div > ico {
+  position: absolute;
+  font-size: 45px;
+  line-height: 100px;
+  left: 20px;
+  top: 0;
+  color: #333;
+  text-shadow: 2px 2px 2px #555;
+  transform: translateY(0deg);
+  transition: text-shadow 0.2s, transform 0.2s;
+}
+#open-list > div:hover > ico, #open-list > div.active > ico {
+  transform: translateY(-5px);
+  text-shadow: 2px 7px 5px #888;
+}
+#open-list > div > h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+  line-height: 30px;
+  color: var(--font2);
+}
+#open-list > div > p {
+  margin: 3px 0;
+  font-size: 15px;
+  line-height: 20px;
+  color: var(--font1);
+}
+#open-list > div > div {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  display: flex;
+  font-size: 18px;
+  color: var(--font1);
+}
+#open-list > div > div > span {
+  height: 40px;
+  padding: 0 20px;
+  background-color: #eee;
+  box-shadow: 0 1px 1px #888;
+  border-radius: 20px;
+  line-height: 40px;
+  margin: 0 10px;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s, background-color 0.2s;
+}
+#open-list > div > div > span:hover {
+  background-color: #ccc;
+}
+#open-list > div > div > span:active {
+  background-color: var(--font1);
+  color: #fff;
+}
