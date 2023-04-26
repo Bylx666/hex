@@ -10,24 +10,24 @@ ico {
   font-family: icon;
   margin-right: 5px;
   user-select: none;
+  -webkit-user-select: none;
 }
 body {
   --theme1: #bee;
   --theme1ex: #cff;
-  --theme2: #8ef;
   --font1: #465;
   --font2: #313;
   --link: #38f;
-  --edit-title: #577;
-  --edit: #310;
-  --edit0: #978a;
-  --editf: #f9aa;
+  --fontcode: code, "Cascadia Mono", Consolas, monospace;
   margin: 0;
   overflow: hidden;
   width: 100vw;
   height: 100vh;
   background-color: var(--theme1);
+  background-position: center;
+  background-size: cover;
   font-family: "PingFangSC-Regular", "Microsoft Yahei UI", sans-serif;
+  transition: opacity 0.2s;
 }
 ::selection {
   background-color: var(--font1);
@@ -53,6 +53,7 @@ body > header > span {
   color: var(--font1);
   border-radius: 5px 5px 0 0;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
   transition: opacity 0.2s;
   font-size: 20px;
@@ -100,7 +101,8 @@ body > header > span.active:hover {
   width: 20px;
   text-align: center;
   user-select: none;
-  font-family: code;
+  -webkit-user-select: none;
+  font-family: var(--fontcode);
 }
 
 main {
@@ -155,6 +157,7 @@ main > div {
   max-height: 100px;
   color: var(--font2);
   word-break: break-all;
+  white-space: pre-wrap;
 }
 #tip > div > div {
   display: flex;
@@ -164,6 +167,7 @@ main > div {
   line-height: 34px;
   color: #888;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
   transition: opacity 0.2s;
   padding: 0 15px;
@@ -178,4 +182,36 @@ main > div {
 }
 #tip > div > div > span:hover {
   opacity: 0.5;
+}
+
+
+#menu > div {
+  z-index: 10;
+  position: fixed;
+  background-color: #eee8;
+  backdrop-filter: blur(2px);
+  box-shadow: 0 2px 2px #888;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 5px 0;
+}
+#menu > div > p {
+  margin: 0;
+  padding: 3px 10px;
+  color: var(--font1);
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  font-size: 15px;
+  text-align: left;
+  background-color: #fff0;
+  transition: background-color 0.2s;
+}
+#menu > div > p:hover {
+  background-color: #fffa;
+}
+#menu > div > hr {
+  border: none;
+  border-bottom: 1px solid #888;
+  margin: 3px 0;
 }

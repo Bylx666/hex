@@ -3,6 +3,7 @@
   left: 50%;top: 50%;
   transform: translate(-50%, -50%);
   user-select: none;
+  -webkit-user-select: none;
   font-size: 20px;
   color: var(--font1);
 }
@@ -32,6 +33,7 @@
 #open-list {
   max-height: calc(100vh - 100px);
   overflow: hidden auto;
+  counter-reset: openlist;
 }
 @keyframes open-in {
   0% {
@@ -51,12 +53,26 @@
   box-shadow: 0 2px 2px #888;
   position: relative;
   background-image: linear-gradient(-20deg, 
-    #fff 0%, #fff 25%, var(--theme2) 50%, #fff 75%, #fff 100%);
+    #fff 0%, #fff 25%, var(--theme1ex) 50%, #fff 75%, #fff 100%);
   background-size: 200% 100%;
   background-position: -60% 0%;
   animation: open-in linear 0.5s;
   transition: background-position 0.5s;
   cursor: pointer;
+  counter-increment: openlist;
+}
+#open-list > div:first-child {
+  counter-increment: none;
+}
+#open-list > div::before {
+  content: counter(openlist);
+  position: absolute;
+  left: 5px;
+  top: 40px;
+  line-height: 20px;
+  font-family: var(--fontcode);
+  font-size: 18px;
+  color: var(--theme1ex);
 }
 #open-list > div.active {
   background-position: 0% 0%;
@@ -77,18 +93,29 @@
   transform: translateY(-5px);
   text-shadow: 2px 7px 5px #888;
 }
-#open-list > div > h3 {
-  margin: 0;
+#open-list > div > input {
+  display: block;
+  padding: 0;
+  outline: none;
+  border: none;
+  border-left: 2px dotted #888;
+  transition: border 0.2s;
+  padding-left: 5px;
+  background: none;
   font-size: 20px;
-  font-weight: normal;
   line-height: 30px;
   color: var(--font2);
+  width: calc(100% - 270px);
+}
+#open-list > div > input:focus {
+  border-left: 2px solid #333;
 }
 #open-list > div > p {
   margin: 3px 0;
   font-size: 15px;
   line-height: 20px;
   color: var(--font1);
+  font-family: var(--fontcode);
 }
 #open-list > div > div {
   position: absolute;
@@ -108,6 +135,7 @@
   margin: 0 10px;
   cursor: pointer;
   user-select: none;
+  -webkit-user-select: none;
   transition: color 0.2s, background-color 0.2s;
 }
 #open-list > div > div > span:hover {

@@ -1,0 +1,54 @@
+#set {
+  padding: 10px 20px;
+}
+#set > h3 {
+  margin: 0;
+  margin-top: 5px;
+  color: var(--font2);
+  font-weight: normal;
+  font-size: 20px;
+}
+#set > p {
+  margin: 5px 10px;
+  color: var(--font1);
+  font-size: 15px;
+}
+
+
+#set-theme {
+  display: flex;
+}
+#set-theme > div, #set-theme > div > div {
+  height: 60px;
+  width: 100px;
+  border-radius: 10px;
+  background-position: center;
+  background-size: 150%;
+}
+#set-theme > div {
+  background-image: linear-gradient(45deg, #5bb, #b55, #5bb);
+  padding: 3px;
+  position: relative;
+  cursor: pointer;
+  margin: 5px;
+  transition: opacity 0.2s;
+  opacity: 1;
+}
+#set-theme > div:hover {
+  opacity: 0.5;
+}
+#set-theme > div.active {
+  background-image: linear-gradient(90deg, #0ff, #f00, #0ff);
+}
+#set-theme > div > p {
+  margin: 0;
+  background-color: #eeec;
+  position: absolute;
+  color: var(--font2);
+  bottom: 3px;
+  left: 3px;
+  border-radius: 0 0 10px 10px;
+  font-size: 15px;
+  text-align: center;
+  width: calc(100% - 6px);
+}

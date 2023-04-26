@@ -6,6 +6,14 @@
 }
 
 
+#edit > canvas {
+  box-shadow: 0 0 0 #f88 inset;
+  transition: box-shadow 0.2s;
+}
+#edit > canvas:focus {
+  box-shadow: 0 0 5px #f88 inset;
+}
+
 #edit-tools {
   z-index: 2;
   position: absolute;
@@ -25,13 +33,14 @@
   font-size: 20px;
   line-height: 30px;
   user-select: none;
+  -webkit-user-select: none;
   cursor: pointer;
   white-space: nowrap;
   width: 110px;
   display: flex;
   padding: 2px 0;
   color: var(--font1);
-  transition: background-color 0.2s, color 0.5s;
+  transition: background-color 0.2s, color 0.2s;
 }
 #edit-tools > p:first-child {
   padding-top: 10px;
@@ -52,46 +61,6 @@
   border: none;
   border-bottom: 1px solid #888;
   margin: 5px 0;
-}
-
-
-#edit-table {
-  display: block;
-  font-family: code, "Cascadia Mono", Consolas, monospace;
-  text-align: left;
-  user-select: none;
-  padding: 10px;
-}
-#edit-table > div {
-  display: flex;
-  line-height: 20px;
-  color: var(--edit);
-}
-#edit-table > div:first-child {
-  color: var(--edit-title);
-}
-#edit-table > div > .h {
-  display: flex;
-  padding-right: 5px;
-}
-#edit-table > div > .h > span {
-  padding: 0 3px;
-  width: 20px;
-}
-#edit-table > div > .h > span:first-child {
-  color: var(--edit-title);
-  padding-right: 8px;
-}
-#edit-table > div > .h > span.f {
-  color: var(--editf);
-}
-#edit-table > div > .h > span.o {
-  color: var(--edit0);
-}
-#edit-table > div > .a {
-  padding: 0 3px;
-  letter-spacing: 3px;
-  white-space: pre;
 }
 
 #edit-scroll {
