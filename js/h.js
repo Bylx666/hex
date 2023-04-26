@@ -1,6 +1,6 @@
 // h.js 意思是头文件地位的文件，包含页面框架和基本工具
 
-// ---文档工具---
+// ---- 文档工具 ---- //
 var $ = { 
   i: (e)=> document.getElementById(e),
 
@@ -26,12 +26,12 @@ var $main = document.querySelector("main");
 
 
 
-// ---渲染导航栏---
+// ---- 渲染导航栏 ---- //
 (()=>{
 
   var frag = document.createDocumentFragment();
 
-  var l = ["<ico>&#xe8ca;</ico>编辑", "<ico>&#xe842;</ico>计算", 
+  var l = ["<ico>&#xe8ca;</ico>编辑", "<ico>&#xe68a;</ico>计算", 
     "<ico>&#xe835;</ico>文件", "<ico>&#xe840;</ico>设置"];
   l.forEach((v, i)=> {
 
@@ -46,7 +46,7 @@ var $main = document.querySelector("main");
 
 
 
-// ---页面工具 *Sub UI* 厉不厉害你Subkey哥，自己写了一套页面系统--- //
+// ---- 页面工具 *Sub UI* 厉不厉害你Subkey哥，自己写了一套页面系统 ---- //
 var Sub = {
   pages: [], // 4个页面的dom对象
   current: -1, // 目前页面在pages的索引
@@ -134,7 +134,7 @@ Sub.tip("欢迎回来", "现在时间: "+new Date().toLocaleTimeString());
 
 
 
-// ---小工具---
+// ---- 小工具 ---- //
 // 数字转字节数
 function parseByte(n) { 
 
@@ -177,21 +177,27 @@ function concatBuffers(abArr) {
 
 
 
-// ---设置---
-var Settings = {
-  columns: 16, // 编辑器列数
-  maxLines: 0, // 设置非0正数作为渲染一页的行数
-  theme: { // 编辑器(Canvas)渲染颜色
-    editTitle: "#577",
-    edit: "#310",
-    edit0: "#978a",
-    editf: "#f9aa"
-  }
-};
+// ---- 设置 ---- //
+var Settings = null;
+try{
+
+  Settings = JSON.parse(localStorage.getItem("settings"));
+  if(typeof Settings!=="object"||typeof Settings.columns!=="number"||typeof Settings.maxLines!=="number"||typeof Settings.theme!=="object") throw 0;
+
+}catch{
+
+  Settings = {
+    columns: 16, // 编辑器列数
+    maxLines: 0, // 设置非0正数作为渲染一页的行数
+    theme: {} // 编辑器(Canvas)渲染颜色
+  };
+
+}
+window.addEventListener("beforeunload", ()=> 
+  localStorage.setItem("settings", JSON.stringify(Settings)));
 
 
-
-// ---文件方面API---
+// ---- 文件方面API ---- //
 var Files = {
   list: [], // 所有打开的文件对象(HexFile[])
   current: -1, // 正在编辑的文件的对象在list里的索引
@@ -204,7 +210,103 @@ var Files = {
 
 
 
-// ---控制编辑器的API---
+// ---- 历史记录【类】 ---- //
+class HexStory {
+  
+  list = [];
+  now = 0;
+  _view = null;
+
+  push(v) {
+
+    this.list.length = this.now++;
+    this.list.push(v);
+
+  };
+
+  undo() {
+    if(this.now<=0) return 0;
+
+    var undo = this.list[--this.now];
+    var typ = undo.type;
+    if((typ&2)===0) {
+
+      const { len, buf, index} = undo;
+      Hex.cursor = index;
+      if(typ===0) return Hex.delete(len, 65);
+      if(typ===1) return Hex.insert(buf, 65);
+
+    }else {
+
+      const { index, set, before } = undo;
+      Hex.cursor = index;
+      if(typ===2) return DataView.prototype["set"+set].call(this._view, index, before);
+      if(typ===3) return Hex.write(before, 65);
+      
+    }
+
+    Hex.render();
+
+  };
+
+  redo() {
+    if(this.now>=this.list.length) return 0;
+
+    var redo = this.list[this.now++];
+    var typ = redo.type;
+    if(typ<2) {
+
+      const { len, buf, index } = redo;
+      Hex.cursor = index;
+      if(typ===0) return Hex.insert(buf?buf:len, 65);
+      if(typ===1) return Hex.delete(len, 65);
+
+    }else {
+
+      const { index, set, after } = redo;
+      Hex.cursor = index;
+      if(typ===2) return DataView.prototype["set"+set].call(this._view, index, after);
+      if(typ===3) return Hex.write(after, 65);
+      
+    }
+
+  };
+
+  get view() {return this._view};
+  // 绑定(劫持)一个dataview使它在set时push一条新历史记录
+  set view(dv) {
+    if(!dv instanceof DataView) return 0;
+
+    var proto = DataView.prototype;
+    this._view = dv;
+    ["Uint8", "Int8", "Uint16", "Int16", "Uint32", "Int32", "BigInt64", "BigUint64", "Float32", "Float64"].forEach((type)=> dv["set"+type] = function() {
+
+      var [i, v, l] = arguments;
+      Hex.file.history.push({
+        type: HexStory.type.SET,
+        index: i,
+        set: type,
+        before: dv["get"+type](i),
+        after: v
+      });
+      proto["set"+type].call(dv, i, v, l);
+
+    });
+
+  }
+
+  static type = {
+    INSERT: 0, 
+    DELETE: 1, 
+    SET: 2, 
+    WRITE: 3 
+  };
+
+}
+
+
+
+// ---- 控制编辑器的API ---- //
 // 不要把Hex替换成this, this很容易被传递别的东西
 var Hex = {
   file: { // 正在编辑的文件的对象
@@ -213,15 +315,13 @@ var Hex = {
     time: Date.now(), // 文件打开时间
     name: "", // 文件名字
     len: 0, // length
-    history: [], // 修改历史, undo redo这种的
+    history: new HexStory(), // 给你undo的机会
     memo: {}, // 文件注释
   }, 
   get buffer() {return Hex.file.buffer}, 
   get len() {return Hex.file.buffer.byteLength}, 
   get his() {return Hex.file.history}, 
   get view() {return Hex.file.view}, 
-  set8(i,v) {return Hex.view.setUint8(i,v)}, 
-  get8(i) {return Hex.view.getUint8(i)}, 
 
   status: 0, // 编辑状态  0:保护原长度模式 ,1:改变原长度模式
   render: null, // Boolean render() 渲染一帧表格, 返回true是渲染到文件尾了
@@ -236,9 +336,10 @@ var Hex = {
   scroll: 0, // 渲染开始处
 
   // 在cursor处插入len个byte(s); len值也可指定一个arraybuffer
-  insert(len) {
+  insert(len, his) {
 
     var i = Hex.cursor;
+    var isBuffer = len instanceof ArrayBuffer;
     var list = null;
     if(i>=Hex.len) list = [
       Hex.buffer, 
@@ -246,17 +347,24 @@ var Hex = {
     ];
     else list = [
       Hex.buffer.slice(0,i), 
-      len instanceof ArrayBuffer?len:new ArrayBuffer(len), 
+      isBuffer?len:new ArrayBuffer(len), 
       Hex.buffer.slice(i)
     ];
     Hex.file.buffer = concatBuffers(list);
 
+    his!==65&&Hex.file.history.push({
+      type: HexStory.type.INSERT, 
+      index: i, 
+      len: isBuffer?len.byteLength:len, 
+      buf: isBuffer?len:null
+    });
+
   },
 
   // 在cursor处[向后]删除len个byte(s)
-  delete(len) {
+  delete(len, his) {
 
-    if(!len) {
+    if(!len) { // 不指定长度就直接把选择部分删掉
 
       const selection = Hex.selection;
       Hex.cursor = Math.min(selection[0], selection[1]);
@@ -267,12 +375,58 @@ var Hex = {
     var i = Hex.cursor;
     if(i+len>Hex.len) len = Hex.len - i;
 
+    his!==65&&Hex.file.history.push({
+      type: HexStory.type.DELETE,
+      index: i,
+      len: len,
+      buf: Hex.buffer.slice(i, i+len)
+    });
+
     Hex.file.buffer = concatBuffers([
       Hex.buffer.slice(0, i), 
       Hex.buffer.slice(i+len)
     ]);
 
   },
+
+  // 从cursor处覆盖上一个arraybuffer
+  write(buf, his) {
+
+    var i = Hex.cursor;
+    var len = buf.byteLength;
+    if(i+len > Hex.len) {
+
+      buf = buf.slice(0, Hex.len - i);
+      len = Hex.len - i;
+
+    }
+
+    his!==65&&Hex.file.history.push({
+      type: HexStory.type.WRITE,
+      index: i,
+      set: len,
+      before: Hex.buffer.slice(i, i + len),
+      after: buf
+    });
+    new Uint8Array(Hex.buffer).set(new Uint8Array(buf), i);
+
+  },
+
+  // 将选择部分用这个val值填充，十分easy
+  fill(val) {
+
+    var sel = Hex.selection;
+    if(!sel[3]) return Sub.tip("填充未遂", "就喜欢你这样喜欢尝试代码的动力, 但是先选中部分吧");
+    const l = Math.abs(sel[0] - sel[1])+1;
+    const _arr = new ArrayBuffer(l);
+    new Uint8Array(_arr).fill(val);
+    Hex.cursor = Math.min(sel[0], sel[1]);
+    Hex.write(_arr);
+    sel[3] = 0;
+
+  },
+
+  // 复制选择部分
   copy() {
 
     var sel = Hex.selection;
@@ -285,10 +439,11 @@ var Hex = {
     );
     Sub.tip("复制成功", "剪切板上现在有"+(Math.abs(sel[0]-sel[1])+1)+"个字节");
 
-    sel[3] = 0;
     Hex.render();
 
   },
+
+  // 删除+复制
   cut() {
     
     var sel = Hex.selection;
@@ -296,34 +451,27 @@ var Hex = {
     Hex.cursor = Math.min(sel[0], sel[1]);
     Hex.copy();
     if(Hex.status) Hex.delete(Math.abs(sel[0]-sel[1])+1);
-    else {
-
-      const v = new Uint8Array(Hex.buffer);
-      v.fill(0x00, Math.min(sel[0], sel[1]), Math.max(sel[0], sel[1])+1);
-
-    }
+    else Hex.fill(0);
     Hex.render();
 
   },
+
+  // insert或遍历写入剪切板
   paste() {
 
     var sel = Hex.selection;
     if(sel[3]&&Hex.status) Hex.delete();
 
     if(Hex.status) Hex.insert(Hex.clipboard);
-    else {
-
-      const v = new Uint8Array(Hex.buffer);
-      let _c = Hex.clipboard;
-      if(_c.byteLength+Hex.cursor > Hex.len)
-        _c = _c.slice(0, Hex.len - Hex.cursor);
-      v.set(new Uint8Array(_c), Hex.cursor);
-
-    }
+    else Hex.write(Hex.clipboard);
     Hex.render();
 
-  }
+  },
 
 };
 
+
+
+// 加载serviceworker
+"serviceWorker" in navigator&&navigator.serviceWorker.register("/serviceworker.js").then((v)=> console.log(v)).catch((r)=> Sub.tip("无法离线缓存", r.message, ()=>{}, true));
 

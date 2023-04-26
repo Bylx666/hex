@@ -11,7 +11,7 @@ Sub.pages[2] = (()=> {
   $d.style.padding = "15px";
   var $_ = (e)=> $d.querySelector("#"+e);
 
-  // --文件列表界面
+  // ---- 文件列表界面 ---- //
   var d1 = $_("open-list");
   
   // 聚焦第i个文件
@@ -44,9 +44,10 @@ Sub.pages[2] = (()=> {
       set name(v) { name = $title.value = v}, 
       get len() {return buffer.byteLength;}, // 文件字节数
       set len(v) {$p2.textContent = v + " (" + parseByte(v) + ")";},
-      history: [], // 修改历史, undo redo这种的
+      history: new HexStory(), // 修改历史, undo redo这种的
       memo: {}, // 文件注释
     };
+    bobj.history.view = bobj.view;
     Files.list.push(bobj);
     d2.i.style.display = "none";
     d1.style.display = "";
@@ -146,7 +147,8 @@ Sub.pages[2] = (()=> {
   };
 
 
-  // --上传界面
+  
+  // ---- 上传界面 ---- //
   var d2 = {
     i: $_("open-upload"),
     file: $.c("input")

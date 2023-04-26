@@ -9,7 +9,7 @@ Sub.pages[0] = (()=> {
 
 
 
-  // --表格渲染部分-- //
+  // ---- 表格渲染部分 ---- //
   var $table = $.c("canvas", 0, $d);
   var t2d = $table.getContext("2d");
   window.addEventListener("resize", ()=> Hex.render());
@@ -26,7 +26,16 @@ Sub.pages[0] = (()=> {
     var scroll = Hex.scroll; // 渲染开头索引
     var left = indexLength * 10 + 27; // 表格主体左间距
     var top = 27;
-    var { editTitle, edit, edit0, editf } = Settings.theme; // 主题色
+
+    // 主题色
+    var { editTitle, edit, edit0, editf, select, selecti, cross } = Settings.theme;
+    editTitle = editTitle||"#577";
+    edit = edit||"#310";
+    edit0 = edit0||"#657a";
+    editf = editf||"#f9aa";
+    select = select||"#521";
+    selecti = selecti||"#e51";
+    cross = cross||"#6af";
 
     // 清空canvas
     $table.height = $main.clientHeight;
@@ -49,6 +58,17 @@ Sub.pages[0] = (()=> {
       }
 
     }
+
+    // 刷新数据查看器
+    curUint8 = Hex.view.getUint8(Hex.cursor);
+    for(let i=0; i<8; ++i) {
+
+      if(curUint8>>(7-i)&1) bin021(i, $bin.children[i]);
+      else bin120(i, $bin.children[i]);
+
+    }
+    for(const type of Object.keys(detailInputs)) 
+      detailInputs[type].value = Hex.view["get"+type](Hex.cursor, littleEndian);
 
     // 渲染选中背景
     var selN = Math.min(selection[0], selection[1]) - scroll;
@@ -83,8 +103,8 @@ Sub.pages[0] = (()=> {
       t2d.fillStyle = "#fff5";
       t2d.fill();
       t2d.lineWidth = 1;
-      t2d.strokeStyle = "#521";
-      if(Hex.status) t2d.strokeStyle = "#e51";
+      t2d.strokeStyle = select;
+      if(Hex.status) t2d.strokeStyle = selecti;
       t2d.stroke();
 
     }
@@ -99,14 +119,13 @@ Sub.pages[0] = (()=> {
       const y = top+3+Math.floor(sel0/cs)*20;
       t2d.strokeRect(left-4+(sel0%cs)*24, y, width, 24);
 
-      t2d.fillStyle = "#6af3";
+      t2d.fillStyle = cross+"3";
       t2d.fillRect(0, y+2, $table.width, 20);
-      t2d.fillStyle = "#9df3";
+      t2d.fillStyle = cross+"1";
       t2d.fillRect(left-2+(sel0%cs)*24, 0, 24, $table.height);
 
     }
 
-    var view = Hex.view;
     // 从滚动位置开始遍历渲染一页内容
     for(let i=scroll;;) {
 
@@ -124,7 +143,7 @@ Sub.pages[0] = (()=> {
         const x = column * 24 + left; 
 
         // 渲染hex
-        const byte = (headered?view.getUint8(i):column);
+        const byte = (headered?Hex.view.getUint8(i):column);
         if(!headered) t2d.fillStyle = editTitle;
         else if(byte===0) t2d.fillStyle = edit0;
         else if(byte===255) t2d.fillStyle = editf;
@@ -158,7 +177,7 @@ Sub.pages[0] = (()=> {
 
 
 
-  // --选中-- //
+  // ---- 选中 ---- //
   // 返回鼠标在$table点击的byte的位置和索引
   var pos = (e)=> {
 
@@ -213,7 +232,7 @@ Sub.pages[0] = (()=> {
     }else {
 
       t2d.clearRect(0, 0, il*10+25, 30);
-      t2d.fillStyle = Settings.theme.editTitle;
+      t2d.fillStyle = Settings.theme.editTitle||"#577";
       t2d.fillText(toHex(p, il), 20, 27);
 
     }
@@ -222,7 +241,7 @@ Sub.pages[0] = (()=> {
 
 
 
-  // --键盘和光标-- //
+  // ---- 键盘事件 ---- //
   $table.tabIndex = "1";
   var keyTipped = false;
   var keyInput1 = -1;
@@ -246,12 +265,13 @@ Sub.pages[0] = (()=> {
     if(e.ctrlKey) {
 
       switch(k) {
-        case "a": selection = Hex.selection = [0, Hex.len-1, 0, 1];break;
-        case "x": Hex.cut();break;
-        case "c": Hex.copy();break;
-        case "v": Hex.paste();break;
-        case "s": Sub.pages[2].querySelectorAll(".active > div > span")[1].click();break;
-        
+        case "a":case "A": selection = Hex.selection = [0, Hex.len-1, 0, 1];break;
+        case "x":case "X": Hex.cut();break;
+        case "c":case "C": Hex.copy();break;
+        case "v":case "V": Hex.paste();break;
+        case "s":case "S": Sub.pages[2].querySelectorAll(".active > div > span")[1].click();break;
+        case "z":case "Z": Hex.his[e.shiftKey?"redo":"undo"]();break;
+        case "y":case "Y": Hex.his.redo();break;
       }
 
     // 处理hex输入
@@ -267,17 +287,16 @@ Sub.pages[0] = (()=> {
       if(Hex.status&&keyInput1===-1) Hex.insert(1);
 
       let i = Hex.cursor;
-      let view = Hex.view;
       if(keyInput1===-1) { // 前4位
 
-        const v = view.getUint8(i)&0x0f;
-        view.setUint8(i, v|(n<<4));
+        const v = Hex.view.getUint8(i)&0x0f;
+        Hex.view.setUint8(i, v|(n<<4));
         keyInput1 = n;
 
       }else { // 后4位
 
         const v = keyInput1<<4;
-        view.setUint8(i, v|n);
+        Hex.view.setUint8(i, v|n);
         if(++Hex.cursor>=Hex.len&&!Hex.status) Hex.cursor = 0;
         keyInput1 = -1;
 
@@ -306,25 +325,34 @@ Sub.pages[0] = (()=> {
       if(Hex.status) {
 
         if(selection[3]) Hex.delete();
-        else if(Hex.cursor>0) --Hex.cursor, Hex.delete(1);
+        else if(Hex.cursor>0) {
+
+          back&&--Hex.cursor;
+          Hex.delete(1);
+          
+        }
         keyInput1 = -1;
 
       }else {
 
-        let start = Hex.cursor;
-        let l = 1;
-        const view = new Uint8Array(Hex.buffer);
-        if(selection[3]) {
+        const val = back?0x00:0xff;
+        if(selection[3]) Hex.fill(val);
+        else {
 
-          l = Math.abs(selection[0] - selection[1])+1;
-          start = Math.min(selection[0], selection[1]);
-          selection[3] = 0;
+          Hex.view.setUint8(Hex.cursor, val);
+          if(back&&--Hex.cursor<0&&!selection[3]) Hex.cursor = 0;
 
-        }else if(back&&--Hex.cursor<0&&!selection[3]) Hex.cursor = 0;
-        view.fill(back?0x00:0xff, start, start+l);
+        }
 
       }
 
+    // home end
+    }else if(k==="Home") Hex.cursor = Hex.scroll = 0;
+    else if(k==="End") {
+
+      Hex.scroll = Math.floor(Hex.len/Settings.columns)*Settings.columns;
+      Hex.cursor = Hex.len - 1;
+      
     }
 
     Hex.render();
@@ -333,7 +361,7 @@ Sub.pages[0] = (()=> {
 
 
 
-  // --渲染滚动条-- //
+  // ---- 渲染滚动条 ---- //
   var $scroll = $.c("div", 0, $d);
   $scroll.id = "edit-scroll";
   $scroll.style.display = "none";
@@ -396,6 +424,93 @@ Sub.pages[0] = (()=> {
     Hex.render();
 
   };
+
+
+
+  // ---- 渲染byte详情 ---- //
+  var $detail = $.c("div", 0, $d);
+  $detail.id = "edit-detail";
+  $.c("h3", "<ico>&#xe82c;</ico>数据查看器", $detail);
+  var $endian = $.c("span", "大字节序", $detail);
+  var littleEndian = false;
+  $endian.onmousedown = function f() {
+
+    littleEndian = true;
+    $endian.textContent = "小字节序";
+    Hex.render();
+    $.a([], $endian);
+    $endian.onmousedown = ()=> {
+
+      littleEndian = false;
+      $endian.textContent = "大字节序";
+      Hex.render();
+      $.a([$endian], null);
+      $endian.onmousedown = f;
+
+    };
+  };
+
+  var detailInputs = {};
+  
+  // 二进制显示
+  var $bin = $.c("p", 0, $detail);
+  $bin.id = "edit-edit-bin";
+  var curUint8 = 0;
+  var bin021 = (i, $span)=> {
+
+    $span.textContent = "1";
+    $span.className = "t";
+    $span.onclick = ()=> {
+
+      Hex.view.setUint8(Hex.cursor, curUint8&~(1<<(7-i)));
+      bin120(i, $span);
+      Hex.render();
+
+    };
+
+  };
+  var bin120 = (i, $span)=> {
+    
+    $span.textContent = "0";
+    $span.className = "f";
+    $span.onclick = ()=> {
+
+      Hex.view.setUint8(Hex.cursor, curUint8|1<<(7-i));
+      bin021(i, $span);
+      Hex.render();
+
+    };
+
+  };
+  for(let i=0; i<8; ++i) $.c("span", 0, $bin);
+
+  // 十进制显示
+  ["Uint8", "Int8", "Uint16", "Int16", "Uint32", "Int32", "BigInt64", "BigUint64", "Float32", "Float64"].forEach((type)=> {
+
+    var $p = $.c("p", 0, $detail);
+    $.c("span", type, $p);
+    var $inp = $.c("input", 0, $p);
+    detailInputs[type] = $inp;
+
+    var conor = parseInt;
+    if(type[0]==="B") conor = (v)=> {
+
+      var dstr = v.match(/\d+/);
+      return dstr?BigInt(dstr[0]):0n;
+
+    };
+    if(type[0]==="F") conor = parseFloat;
+    $inp.onchange = ()=> {
+
+      var num = conor($inp.value);
+      if(num===NaN) return 0;
+      $inp.value = num;
+      Hex.view["set"+type](Hex.cursor, num);
+      Hex.render();
+
+    };
+
+  });
 
   return $d;
 

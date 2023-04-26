@@ -64,20 +64,28 @@
 
 
 
-  // ---普通按钮---
-  var B = {
-    undo: $.c("p", "<ico>&#xe636;</ico>撤销", $tool),
-    redo: $.c("p", "<ico>&#xe635;</ico>重做", $tool)
+  // ---历史---
+  var $undo = $.c("p", "<ico>&#xe636;</ico>撤销", $tool);
+  $undo.onmousedown = ()=> {
+
+    Hex.his.undo();
+    Hex.render();
+    
+  };
+  var $redo = $.c("p", "<ico>&#xe635;</ico>重做", $tool);
+  $redo.onmousedown = ()=> {
+
+    Hex.his.redo();
+    Hex.render();
+
   };
   $.c("hr", null, $tool);
 
 
+  // ---- 脚本 ---- //
+  var $script = $.c("p", "<ico>&#xec68;</ico>脚本", $tool);
 
-  // ---弹窗按钮---
-  var C = {
-    script: $.c("p", "<ico>&#xec68;</ico>脚本", $tool),
-    find: $.c("p", "<ico>&#xe843;</ico>查找", $tool),
-    memo: $.c("p", "<ico>&#xe84a;</ico>注释", $tool)
-  };
+  var $find = $.c("p", "<ico>&#xe844;</ico>查找", $tool);
+  var $memo = $.c("p", "<ico>&#xe875;</ico>注释", $tool);
 
-})(Sub.pages[0])
+})(Sub.pages[0]);

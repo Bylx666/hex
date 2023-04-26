@@ -18,6 +18,7 @@ body {
   --font1: #465;
   --font2: #313;
   --link: #38f;
+  --linkex: #5dd;
   --fontcode: code, "Cascadia Mono", Consolas, monospace;
   margin: 0;
   overflow: hidden;
@@ -32,6 +33,20 @@ body {
 ::selection {
   background-color: var(--font1);
   color: #fff;
+}
+input {
+  padding: 0;
+  outline: none;
+  border: none;
+  background: none;
+}
+a {
+  color: var(--link);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+a:hover {
+  opacity: 0.5;
 }
 
 @keyframes fadein {
@@ -174,8 +189,8 @@ main > div {
 }
 #tip > div > div > span:first-child {
   z-index: 102;
-  background-color: #5dd;
-  box-shadow: 0 1px 3px #5dd;
+  background-color: var(--linkex);
+  box-shadow: 0 1px 3px var(--linkex);
   color: #fff;
   border-radius: 10px;
   position: relative;

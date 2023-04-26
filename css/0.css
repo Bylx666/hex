@@ -9,10 +9,12 @@
 #edit > canvas {
   box-shadow: 0 0 0 #f88 inset;
   transition: box-shadow 0.2s;
+  outline: none;
 }
 #edit > canvas:focus {
   box-shadow: 0 0 5px #f88 inset;
 }
+
 
 #edit-tools {
   z-index: 2;
@@ -63,6 +65,7 @@
   margin: 5px 0;
 }
 
+
 #edit-scroll {
   width: 20px;
   box-shadow: 0 1px 3px #888;
@@ -80,4 +83,40 @@
 }
 #edit-scroll > div:active {
   opacity: 0.8;
+}
+
+
+#edit-detail {
+  padding: 5px;
+}
+#edit-detail > h3 {
+  color: var(--font2);
+  margin: 0;
+
+}
+#edit-detail > span {
+  display: block;
+  background-color: var(--linkex);
+  box-shadow: 0 1px 3px var(--linkex);
+  line-height: 24px;
+  font-size: 15px;
+  color: #fff;
+  background-image: linear-gradient(90deg, #fff 0%, #fff 50%, var(--linkex) 50%, var(--linkex) 100%);
+  background-size: 200% 100%;
+  background-position-x: 90%;
+  width: 100px;
+  text-align: center;
+  opacity: 1;
+  cursor: pointer;
+  transition: background-position-x 0.2s, color 0.2s;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#edit-detail > span.active {
+  color: var(--linkex);
+  background-position-x: 10%;
+}
+#edit-detail > p {
+  color: var(--font1);
+  margin: 0;
 }

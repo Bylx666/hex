@@ -1,16 +1,18 @@
 #set {
-  padding: 10px 20px;
+  padding: 0 20px;
+  color: var(--font1);
+  height: 100%;
+  overflow: auto;
 }
 #set > h3 {
   margin: 0;
-  margin-top: 5px;
+  margin-top: 20px;
   color: var(--font2);
   font-weight: normal;
   font-size: 20px;
 }
 #set > p {
   margin: 5px 10px;
-  color: var(--font1);
   font-size: 15px;
 }
 
@@ -51,4 +53,62 @@
   font-size: 15px;
   text-align: center;
   width: calc(100% - 6px);
+}
+
+
+#set-keys > p {
+  background-color: var(--linkex);
+  box-shadow: 0 1px 3px var(--linkex);
+  margin: 10px;
+  padding: 10px;
+  line-height: 20px;
+  font-size: 15px;
+  color: #fff;
+  border-radius: 20px;
+  width: 120px;
+  text-align: center;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.2s;
+}
+#set-keys > p:hover {
+  opacity: 0.5;
+}
+#set-keys > div {
+  padding: 5px;
+  animation: fadein 0.2s;
+}
+#set-keys > div > div {
+  display: flex;
+  padding: 5px 0;
+  font-size: 15px;
+}
+#set-keys > div > div > kbd {
+  font-family: var(--fontcode);
+  width: 180px;
+}
+
+#set-para {
+  padding: 5px;
+}
+#set-para > p {
+  margin: 0;
+  padding: 10px 5px;
+  font-size: 15px;
+}
+#set-para > p > input {
+  color: var(--link);
+  margin: 0 5px;
+  padding: 0 5px;
+  font-family: var(--fontcode);
+  border-bottom: 1px solid var(--link);
+  width: 60px;
+  text-align: center;
+}
+
+#set-end {
+  text-align: center;
+  padding: 20px;
 }
