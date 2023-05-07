@@ -53,6 +53,8 @@ body > header > span.active {
 body {
   background-image: url(/res/bg4.jpg);
   --link: #5dd;
+  --font1: #aac;
+  --font2: #fff;
 }
 main {
   background-color: #0000;
@@ -66,16 +68,15 @@ main {
 #edit-tools:hover {
   background-color: #000a;
 }
-#edit-tools > p {color: #fff;}
+#edit-tools > p {color: var(--font2);}
 #edit-tools > p:hover {background-color: #fff3;}
 #edit-tools > hr {
   border: none;
 }
-body > header > span{color: #aac;}
+body > header > span{color: var(--font1);}
 body > header > span.active {
   background-color: #0000;
   box-shadow: none;
-  color: #fff;
 }
 #edit > canvas {
   box-shadow: 0 0 0 #fff inset;
@@ -85,8 +86,10 @@ body > header > span.active {
 #edit > canvas:focus {box-shadow: 0 0 5px #fff inset;}
 #edit-scroll {box-shadow: none;}
 #edit-scroll > div {background-color: #fff;}
-#set > h3 {color: #fff}
-#set {color: #ccc}
+#open-list > div {
+  background-image: linear-gradient(-20deg, #0000 0%, #0000 25%, #fea 50%, #0000 75%, #0000 100%);
+  box-shadow: 0 1px 2px #ccc;
+}
 `,
     theme: {
       editTitle: "#fae", 
@@ -107,6 +110,8 @@ body {
   background-color: #f1f3f4;
   background-repeat: repeat-y;
   --link: #5dd;
+  --font1: #ccf;
+  --font2: #fff;
 }
 main {background-color: #333a;}
 #edit-tools {background-color: #333;}
@@ -122,8 +127,11 @@ body > header > span.active {
 }
 #edit > canvas:focus {box-shadow: 0 0 5px #fff inset;}
 #edit-scroll > div {background-color: #fff;}
-#set > h3 {color: #fff}
-#set {color: #ccc}
+#open-list > div {
+  background-image: linear-gradient(-20deg, #0000 0%, #0005 25%, #fea 50%, #0005 75%, #0000 100%);
+  box-shadow: 0 1px 2px #ccc;
+}
+#set-theme > div > p {color: #546}
 `,
     theme: {
       editTitle: "#e8e", 
@@ -188,7 +196,7 @@ body > header > span.active {
 
 
   {
-    name: "经典",
+    name: "初号机",
     bg: "linear-gradient(15deg, #acc, #cff)"
   }
 ];

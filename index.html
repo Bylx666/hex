@@ -16,16 +16,26 @@
   <main></main>
   <div id="tip"></div>
   <div id="menu"></div>
+  <!-- 框架 -->
   <script src="/js/h.js"></script>
-  <script src="/js/2.js"></script>
-  <script src="/js/0.js"></script>
-  <script src="/js/0-tools.js"></script>
-  <script src="/js/3-themes.js"></script>
-  <script src="/js/3.js"></script>
+  <script src="/js/event.js"></script>
+  <script src="/js/file.js"></script>
+  <script src="/js/history.js"></script>
+  <script src="/js/editor.js"></script>
+  <script src="/js/plugin.js"></script>
+  <!-- 页面动态渲染 -->
+  <script src="/js/pages/2.js"></script>
+  <script src="/js/pages/0.js"></script>
+  <script src="/js/pages/0-tools.js"></script>
+  <script src="/js/pages/3-themes.js"></script>
+  <script src="/js/pages/3.js"></script>
   <script>
-Files.open(new ArrayBuffer(0x500));
-Files.focus(0);
-// Sub.pageTo(3);
+HexFiles.open(new ArrayBuffer(300));
+// HexFiles.focus(0);
+Sub.pageTo(3);
+
+// "serviceWorker" in navigator&&navigator.serviceWorker.register("/serviceworker.js").catch((r)=> Sub.tip("无法离线缓存", r.message, ()=>{}, true));
+
   </script>
 </body>
 </html>

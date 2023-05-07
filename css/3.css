@@ -46,7 +46,7 @@
   margin: 0;
   background-color: #eeec;
   position: absolute;
-  color: var(--font2);
+  color: #546;
   bottom: 3px;
   left: 3px;
   border-radius: 0 0 10px 10px;
@@ -106,6 +106,62 @@
   border-bottom: 1px solid var(--link);
   width: 60px;
   text-align: center;
+}
+
+#set-plug {
+  padding: 5px;
+  display: flex;
+  flex-wrap: wrap;
+}
+#set-plug > div {
+  width: 320px;
+  height: 120px;
+  box-shadow: 0 0 10px #0002;
+  margin: 5px;
+  border-radius: 60px;
+  position: relative;
+  display: flex;
+  cursor: pointer;
+  animation: fadein 0.5s;
+}
+#set-plug > div > h4 {
+  color: var(--font2);
+  margin: 0;
+  width: 120px;
+  line-height: 120px;
+  text-align: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+#set-plug > div > p {
+  font-size: 15px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  margin: 0;
+  padding: 10px;
+  width: 170px;
+}
+#set-plug > div > div {
+  position: absolute;
+  top: 0;left: 0;
+  border-radius: 60px;
+  width: 120px;
+  height: 120px;
+  background-color: var(--linkex);
+  opacity: 0.2;
+  box-shadow: 0 0 5px var(--linkex);
+  pointer-events: none;
+  transition: width 0.2s, opacity 0.2s;
+}
+#set-plug > div:hover > div {
+  opacity: 0.3;
+}
+#set-plug > div.active > div {
+  width: 320px;
+  opacity: 0.3;
+}
+#set-plug > div.active:hover > div {
+  opacity: 0.2;
 }
 
 #set-end {

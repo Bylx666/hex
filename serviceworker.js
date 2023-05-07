@@ -1,8 +1,32 @@
-self.addEventListener("install", (e)=> e.waitUntil(caches.open("v1").then((cache)=> cache.addAll(["index.html", "h.js"]))));
+const V = "v4";
 
-self.addEventListener("fetch", (e)=> e.respondWith(caches.match(e.request).then((v)=> v||fetch(e.request).then((v)=> {
+oninstall = ()=> {
 
-  caches.open("v1").then((cache)=> cache.put(e.request, v.clone()));
-  return v;
+  skipWaiting();
+  caches.open(V).then((cache)=> cache.addAll("/", "/index.html"));
 
-}).catch((r)=> new Response(0, {"status": 404, "statusText": "莫得网络"})))));
+};
+
+onactivate = ()=> caches.keys().then((keys)=> keys.forEach((v)=> v!==V&&caches.delete(v)));
+
+const onfet = async(req)=> {
+
+  var cache = await caches.open(V);
+  var cached = await cache.match(req);
+  if(cached) return cached;
+
+  try {
+
+    var res = await fetch(req);
+    cache.put(req, res.clone());
+    return res;
+
+  }catch {
+
+    return new Response("你请求的文件gg了", {"status": 408});
+
+  }
+
+};
+
+onfetch = (e)=> e.respondWith(onfet(e.request));

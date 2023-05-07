@@ -49,7 +49,6 @@
   padding: 10px;
   padding-left: 80px;
   border-radius: 20px;
-  background-color: #fff;
   box-shadow: 0 2px 2px #888;
   position: relative;
   background-image: linear-gradient(-20deg, 
@@ -119,7 +118,7 @@
   top: 30px;
   display: flex;
   font-size: 18px;
-  color: var(--font1);
+  color: #546;
 }
 #open-list > div > div > span {
   height: 40px;

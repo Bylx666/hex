@@ -31,7 +31,7 @@ Sub.pages[3] = (()=> {
         localStorage.setItem("last-theme", i);
         document.body.style.opacity = 1;
         $.a($theme.children, $div);
-        Hex.render();
+        Editor.render();
 
       }, 200);
 
@@ -55,6 +55,7 @@ Sub.pages[3] = (()=> {
     ["Delete", "删除一格, 覆盖模式下填充ff"], 
     ["Home", "跳到文件开头"], 
     ["End", "跳到文件结尾"], 
+    ["ctrl+a", "文件内全选"], 
     ["ctrl+x", "剪切选中部分"], 
     ["ctrl+c", "复制选中部分"], 
     ["ctrl+v", "在指针处粘贴"], 
@@ -62,7 +63,8 @@ Sub.pages[3] = (()=> {
     ["ctrl+z", "撤销一步操作"], 
     ["ctrl+shift+z|ctrl+y", "重做一步"], 
     ["↑↓←→", "移动指针, 插入模式可以移到空白的地方输入"], 
-    ["1-9|a-F|A-F", "写入十六进制数字"], 
+    ["1-9|a-f|A-F", "写入十六进制数字"], 
+    ["Space", "聚焦编辑器"]
   ].forEach((v)=> $.c("div", `<kbd>${v[0]}</kbd>${v[1]}`, $keysList));
   $keysWitch.onmousedown = function f() {
 
@@ -100,7 +102,7 @@ Sub.pages[3] = (()=> {
 
       }
       $inp.value = Settings[v[1]] = val;
-      Hex.render();
+      Editor.render();
 
     };
 
@@ -113,8 +115,7 @@ Sub.pages[3] = (()=> {
     ["零零的颜色", "edit0", "#657a"],
     ["艾弗的颜色", "editf", "#f9aa"],
     ["覆盖边框色", "select", "#521"],
-    ["插入边框色", "selecti", "#e51"], 
-    ["选中十字色", "cross", "#6af"]
+    ["插入边框色", "selecti", "#e51"]
   ].forEach((v)=> {
 
     var $p = $.c("p", v[0], $para);
@@ -124,16 +125,30 @@ Sub.pages[3] = (()=> {
     colorResets.push(reset);
     $inp.onchange = ()=> {
 
-      var val = $inp.value;
-      if(!val.startsWith("#")||![4,5,7,9].find((w)=>w===val.length)) return reset();
+      var val = $inp.value.match(/\#[^#](\S+)/)[0];
+      if(!val||![4,5,7,9].find((w)=>w===val.length)) return reset();
       $inp.value = Settings.theme[v[1]] = val;
-      Hex.render();
+      Editor.render();
 
     };
 
   });
   
   $theme.children[localStorage.getItem("last-theme")||5].click();
+
+
+
+  // ---- plugins ---- //
+  $.c("h3", "<ico>&#xe84f;</ico>超容易的插件", $d);
+  $.c("p", "单击插件开关，只能改变下次回来时是否启动此插件，并不能立刻关闭", $d);
+  $.c("p", "可以开关预置插件，可以自己写，超自由。API文档 →<a href=\"/docs/index.html\"><ico>&#xe842;</ico>Docs</a>", $d);
+  var $plugs = $.c("div", 0, $d);
+  $plugs.id = "set-plug";
+
+  var $plugsAdd = $.c("div", `<h4>导入</h4>
+<p>注意：\n请不要随便导入不熟的人的插件，小心浏览器数据被盗取</p>
+<div></div>`, $plugs);
+  $plugsAdd.id = "set-plug-add";
 
 
 
@@ -148,3 +163,34 @@ Sub.pages[3] = (()=> {
   return $d;
 
 })();
+
+
+
+// ---- 在设置页面渲染完时加载local插件列表 ---- //
+try {
+
+  const pluginsa = JSON.parse(localStorage.getItem("plugins"));
+  if(typeof pluginsa!=="object"||pluginsa.e.length===undefined||pluginsa.d.length===undefined) throw 0;
+  pluginsa.e.forEach((src)=> HexPlugins.load(src, "plugins-localstorage"));
+  pluginsa.d.forEach((o)=> {
+
+    var { name, desc, src, srcName } = o;
+    var plug = new HexPlugin(src, "plugins-localstorage");
+    plug.elem.onclick = ()=> plug.load("user-click");
+    plug.elem.innerHTML = `<h4>${name}</h4>`
+     +`<p><a href="${src}" target="_blank"><ico>&#xe842;</ico>${srcName}</a>\n`
+     +`${desc}</p><div></div>`;
+    Sub.pages[3].querySelector("#set-plug").append(plug.elem);
+
+  });
+
+} catch {
+
+  localStorage.removeItem("plugins");
+
+}
+window.addEventListener("beforeunload", ()=> 
+ localStorage.setItem("plugins", JSON.stringify({
+  e: HexPlugins.enabled, 
+  d: HexPlugins.disabled
+})));
