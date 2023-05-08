@@ -4,11 +4,11 @@
 统计
 转字符也要有base64功能
 导出hex和文本版hex
-新文件中打开选区
+打开选区到新文件
 
 手机适配
 try{stream saver}catch{tip()}
 退出时缓存文件和插件IndexedDB
 搜索，跳转, 向后选择n bytes
->> 插入模式下撤销有问题
+
 

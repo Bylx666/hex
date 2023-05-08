@@ -17,14 +17,6 @@ var HexPlugins = {
 
   }, 
 
-  // 异步主动添加插件
-  require(...rqrs) {return Promise.all(rqrs.map((rqr)=> {
-
-    var that = HexPlugins.load(rqr, "plugin-require");
-    if(that.loaded===1) return Promise.resolve(that);
-    return new Promise((resolve)=> that.on("load", resolve));
-
-  }))}
 };
 
 function HexPlugin(src, from) {
@@ -39,8 +31,7 @@ function HexPlugin(src, from) {
     name: splLast.split(".")[0], 
     src, 
     srcName: splLast.toLocaleUpperCase(), 
-    desc: from||src, 
-    enabled: 0
+    desc: from||src
   };
 
   this.return = null;
@@ -83,7 +74,7 @@ HexPlugin.prototype = Object.create(EventEmitter.prototype,
       $plug.innerHTML = `<h4>${name}</h4>`
       +`<p><a href="${src}" target="_blank"><ico>&#xe842;</ico>${srcName}</a>\n`
       +`${desc}</p><div></div>`;
-      this.enable();
+      this.enable(from);
 
       // 插件加载完成的load事件，无法取消
       this.emit("load", {
@@ -149,5 +140,11 @@ HexPlugin.prototype = Object.create(EventEmitter.prototype,
     this.elem.onclick = ()=> that.enable("user-click");
 
   }, 
-  require: HexPlugins.require
+  require(...rqrs) {return Promise.all(rqrs.map((rqr)=> {
+
+    var that = HexPlugins.load(rqr, "plugin-require");
+    if(that.loaded===1) return Promise.resolve(that);
+    return new Promise((resolve)=> that.on("load", resolve));
+
+  }))}
 }));

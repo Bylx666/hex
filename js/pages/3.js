@@ -149,6 +149,13 @@ Sub.pages[3] = (()=> {
 <p>注意：\n请不要随便导入不熟的人的插件，小心浏览器数据被盗取</p>
 <div></div>`, $plugs);
   $plugsAdd.id = "set-plug-add";
+  $plugsAdd.onclick = ()=> {
+
+    var inp = prompt("输入导入的url");
+    if(!inp) return 0;
+    HexPlugins.load(inp).load();
+
+  }
 
 
 

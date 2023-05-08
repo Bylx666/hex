@@ -10,12 +10,12 @@ Sub.pages[0] = (()=> {
   window.addEventListener("resize", ()=> Editor.render());
 
   // 表格渲染
-  Editor.render = ()=> {
+  Editor.render = (from)=> {
 
     if(Editor.emit("render", {
       type: "render", 
       file: Hex, 
-      from: "unknown"
+      from: from||"unknown"
     })) return 0;
 
     // 渲染用的数据

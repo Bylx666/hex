@@ -1,4 +1,4 @@
-// ---- 文件方面API, 具体函数在2.js中 ---- //
+// ---- 文件方面API ---- //
 var HexFiles = {
   list: [], // 所有打开的文件对象(HexFile[])
   current: -1, // 正在编辑的文件的对象在list里的索引
@@ -15,7 +15,7 @@ var HexFiles = {
 
     for(const file of fs) {
 
-      var open = ()=> {
+      const open = ()=> {
 
         ++this.loading;
         $.i("loading").querySelector("span").textContent = this.loading;
@@ -43,7 +43,7 @@ var HexFiles = {
 
   }, 
 
-  // void open(buffer, name) 传入单个文件的buffer并在buffers里加入对应对象
+  // open(buffer, name) 传入单个文件的buffer并在buffers里加入对应对象
   open(buffer, name, from) {
 
     var file = new HexFile(buffer, name);
@@ -54,6 +54,7 @@ var HexFiles = {
     })) return 0;
 
     this.list.push(file);
+    return file;
 
   }, 
 
@@ -87,7 +88,6 @@ EventEmitter.extBy(HexFiles);
 function HexFile(buffer, name) {
 
   this.buffer = buffer; // 文件的arraybuffer
-  this.view = null; // 对应的dataview
   this.len = buffer.byteLength;
 
   this.history = new HexStory(this), // 修改历史, undo redo这种的
